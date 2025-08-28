@@ -12,6 +12,66 @@ mainFrame.BackgroundColor3 = Color3.new(0.05, 0.05, 0.1)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = gui
 
+-- Botón circular para reabrir la GUI
+local reOpenButton = Instance.new("TextButton")
+reOpenButton.Name = "ReOpenButton"
+reOpenButton.Size = UDim2.new(0, 60, 0, 60)
+reOpenButton.Position = UDim2.new(0, 30, 0, 30)
+reOpenButton.BackgroundColor3 = Color3.new(0, 1, 0.5)
+reOpenButton.BackgroundTransparency = 0.3
+reOpenButton.BorderSizePixel = 0
+reOpenButton.Text = "⚡"
+reOpenButton.TextColor3 = Color3.new(1, 1, 1)
+reOpenButton.TextScaled = true
+reOpenButton.Font = Enum.Font.GothamBold
+reOpenButton.TextStrokeColor3 = Color3.new(0, 0.5, 0.2)
+reOpenButton.TextStrokeTransparency = 0
+reOpenButton.Visible = false
+reOpenButton.ZIndex = 100
+reOpenButton.Parent = gui
+
+-- Hacer el botón circular
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 30)
+corner.Parent = reOpenButton
+
+-- Efecto de neón para el botón circular
+local neonBorder = Instance.new("Frame")
+neonBorder.Size = UDim2.new(1, 12, 1, 12)
+neonBorder.Position = UDim2.new(0, -6, 0, -6)
+neonBorder.BackgroundColor3 = Color3.new(0, 1, 0.5)
+neonBorder.BackgroundTransparency = 0.7
+neonBorder.BorderSizePixel = 0
+neonBorder.ZIndex = 99
+neonBorder.Parent = reOpenButton
+
+local borderCorner = Instance.new("UICorner")
+borderCorner.CornerRadius = UDim.new(0, 36)
+borderCorner.Parent = neonBorder
+
+-- Animación pulsante para el botón circular
+spawn(function()
+    while gui.Parent do
+        if reOpenButton.Visible then
+            reOpenButton:TweenSize(UDim2.new(0, 65, 0, 65), "InOut", "Quad", 0.5)
+            wait(0.5)
+            reOpenButton:TweenSize(UDim2.new(0, 60, 0, 60), "InOut", "Quad", 0.5)
+            wait(0.5)
+        else
+            wait(1)
+        end
+    end
+end)
+
+-- Evento para reabrir la GUI
+reOpenButton.MouseButton1Click:Connect(function()
+    mainFrame.Visible = true
+    reOpenButton.Visible = false
+    
+    -- Animación de apertura
+    mainFrame:TweenPosition(UDim2.new(0.5, -160, 0.5, -110), "Out", "Back", 0.5)
+end)
+
 -- Efecto de brillo neón
 local neonGlow = Instance.new("Frame")
 neonGlow.Size = UDim2.new(1, 20, 1, 20)
@@ -30,7 +90,6 @@ local ledColors = {
     Color3.new(1, 0, 0.8), -- Rosa neón
     Color3.new(1, 0.8, 0) -- Amarillo intenso
 }
-
 for i = 1, 4 do
     local led = Instance.new("Frame")
     led.Size = UDim2.new(0, 35, 0, 35)
@@ -67,7 +126,7 @@ end)
 
 -- Título con efecto de brillo
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
+title.Size = UDim2.new(1, -40, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "BRAINROT HACKS"
@@ -78,6 +137,41 @@ title.TextStrokeColor3 = Color3.new(0, 0.5, 0.2)
 title.TextStrokeTransparency = 0.3
 title.Parent = mainFrame
 
+-- Botón cerrar con estilo cyberpunk
+local closeButton = Instance.new("TextButton")
+closeButton.Name = "CloseButton"
+closeButton.Size = UDim2.new(0, 30, 0, 30)
+closeButton.Position = UDim2.new(1, -35, 0, 5)
+closeButton.BackgroundColor3 = Color3.new(1, 0, 0.8)
+closeButton.BackgroundTransparency = 0.3
+closeButton.BorderSizePixel = 0
+closeButton.Text = "✕"
+closeButton.TextColor3 = Color3.new(1, 1, 1)
+closeButton.TextScaled = true
+closeButton.Font = Enum.Font.GothamBold
+closeButton.TextStrokeColor3 = Color3.new(0.5, 0, 0.3)
+closeButton.TextStrokeTransparency = 0
+closeButton.Parent = mainFrame
+
+-- Efecto de borde neón para el botón cerrar
+local closeBorder = Instance.new("Frame")
+closeBorder.Size = UDim2.new(1, 6, 1, 6)
+closeBorder.Position = UDim2.new(0, -3, 0, -3)
+closeBorder.BackgroundColor3 = Color3.new(1, 0, 0.8)
+closeBorder.BorderSizePixel = 0
+closeBorder.BackgroundTransparency = 0.7
+closeBorder.ZIndex = -1
+closeBorder.Parent = closeButton
+
+-- Función para cerrar la GUI
+closeButton.MouseButton1Click:Connect(function()
+    -- Animación de cierre
+    mainFrame:TweenPosition(UDim2.new(0.5, -160, 0.5, -500), "In", "Back", 0.5)
+    wait(0.5)
+    mainFrame.Visible = false
+    reOpenButton.Visible = true
+end)
+
 -- Botones con estilo futurista
 local buttons = {}
 local buttonNames = {"ESP", "SPEED", "JUMP"}
@@ -86,7 +180,6 @@ local buttonColors = {
     Color3.new(0.2, 0.5, 1), -- Azul eléctrico
     Color3.new(1, 0, 0.8) -- Rosa neón
 }
-
 for i, name in ipairs(buttonNames) do
     local btn = Instance.new("TextButton")
     btn.Name = name
