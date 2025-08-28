@@ -1,486 +1,456 @@
--- GUI Principal con estilo cyberpunk
-local gui = Instance.new("ScreenGui")
-gui.Name = "BrainrotESP"
-gui.ResetOnSpawn = false
-gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local Player = game:GetService("Players").LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
 
--- Fondo con efecto de neón
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 320, 0, 220)
-mainFrame.Position = UDim2.new(0.5, -160, 0.5, -110)
-mainFrame.BackgroundColor3 = Color3.new(0.05, 0.05, 0.1)
-mainFrame.BorderSizePixel = 0
-mainFrame.Parent = gui
+-- Crear la interfaz GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AdminPanel"
+ScreenGui.Parent = game:GetService("CoreGui")  -- Para testing en Studio
+-- ScreenGui.Parent = Player.PlayerGui  -- Para el juego publicado
 
--- Botón circular para reabrir la GUI
-local reOpenButton = Instance.new("TextButton")
-reOpenButton.Name = "ReOpenButton"
-reOpenButton.Size = UDim2.new(0, 60, 0, 60)
-reOpenButton.Position = UDim2.new(0, 30, 0, 30)
-reOpenButton.BackgroundColor3 = Color3.new(0, 1, 0.5)
-reOpenButton.BackgroundTransparency = 0.3
-reOpenButton.BorderSizePixel = 0
-reOpenButton.Text = "⚡"
-reOpenButton.TextColor3 = Color3.new(1, 1, 1)
-reOpenButton.TextScaled = true
-reOpenButton.Font = Enum.Font.GothamBold
-reOpenButton.TextStrokeColor3 = Color3.new(0, 0.5, 0.2)
-reOpenButton.TextStrokeTransparency = 0
-reOpenButton.Visible = false
-reOpenButton.ZIndex = 100
-reOpenButton.Parent = gui
+-- Crear el círculo para abrir/cerrar el menú
+local CircleButton = Instance.new("TextButton")
+CircleButton.Parent = ScreenGui
+CircleButton.Size = UDim2.new(0, 40, 0, 40)
+CircleButton.Position = UDim2.new(0, 10, 0.5, -20)
+CircleButton.Text = "☰"
+CircleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CircleButton.TextSize = 20
+CircleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+CircleButton.BorderSizePixel = 0
+CircleButton.AutoButtonColor = false
+CircleButton.Name = "CircleMenuButton"
 
--- Hacer el botón circular
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 30)
-corner.Parent = reOpenButton
+-- Hacer el círculo redondo
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(1, 0)
+UICorner.Parent = CircleButton
 
--- Efecto de neón para el botón circular
-local neonBorder = Instance.new("Frame")
-neonBorder.Size = UDim2.new(1, 12, 1, 12)
-neonBorder.Position = UDim2.new(0, -6, 0, -6)
-neonBorder.BackgroundColor3 = Color3.new(0, 1, 0.5)
-neonBorder.BackgroundTransparency = 0.7
-neonBorder.BorderSizePixel = 0
-neonBorder.ZIndex = 99
-neonBorder.Parent = reOpenButton
+-- Crear frame contenedor (inicialmente invisible)
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 200, 0, 280)
+Frame.Position = UDim2.new(0, 60, 0, 10)
+Frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+Frame.BackgroundTransparency = 0.2
+Frame.BorderSizePixel = 0
+Frame.Visible = false
+Frame.Name = "MenuFrame"
 
-local borderCorner = Instance.new("UICorner")
-borderCorner.CornerRadius = UDim.new(0, 36)
-borderCorner.Parent = neonBorder
+-- Título "Menú Script"
+local Title = Instance.new("TextLabel")
+Title.Parent = Frame
+Title.Size = UDim2.new(0, 180, 0, 20)
+Title.Position = UDim2.new(0, 10, 0, 5)
+Title.Text = "Menú Script"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 16
+Title.TextXAlignment = Enum.TextXAlignment.Center
 
--- Animación pulsante para el botón circular
-spawn(function()
-    while gui.Parent do
-        if reOpenButton.Visible then
-            reOpenButton:TweenSize(UDim2.new(0, 65, 0, 65), "InOut", "Quad", 0.5)
-            wait(0.5)
-            reOpenButton:TweenSize(UDim2.new(0, 60, 0, 60), "InOut", "Quad", 0.5)
-            wait(0.5)
-        else
-            wait(1)
-        end
-    end
-end)
+-- Texto de TikTok
+local TikTokText = Instance.new("TextLabel")
+TikTokText.Parent = Frame
+TikTokText.Size = UDim2.new(0, 180, 0, 15)
+TikTokText.Position = UDim2.new(0, 10, 0, 25)
+TikTokText.Text = "Tk: @gerardovillaruizoficial"
+TikTokText.TextColor3 = Color3.fromRGB(200, 200, 200)
+TikTokText.BackgroundTransparency = 1
+TikTokText.Font = Enum.Font.SourceSans
+TikTokText.TextSize = 12
+TikTokText.TextXAlignment = Enum.TextXAlignment.Center
 
--- Evento para reabrir la GUI
-reOpenButton.MouseButton1Click:Connect(function()
-    mainFrame.Visible = true
-    reOpenButton.Visible = false
-    
-    -- Animación de apertura
-    mainFrame:TweenPosition(UDim2.new(0.5, -160, 0.5, -110), "Out", "Back", 0.5)
-end)
+-- Botón de Noclip
+local NoclipButton = Instance.new("TextButton")
+NoclipButton.Parent = Frame
+NoclipButton.Size = UDim2.new(0, 180, 0, 30)
+NoclipButton.Position = UDim2.new(0, 10, 0, 45)
+NoclipButton.Text = "Noclip: OFF"
+NoclipButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+NoclipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoclipButton.Font = Enum.Font.SourceSansBold
+NoclipButton.TextSize = 14
+NoclipButton.Name = "NoclipButton"
 
--- Efecto de brillo neón
-local neonGlow = Instance.new("Frame")
-neonGlow.Size = UDim2.new(1, 20, 1, 20)
-neonGlow.Position = UDim2.new(0, -10, 0, -10)
-neonGlow.BackgroundColor3 = Color3.new(0, 1, 0.5)
-neonGlow.BorderSizePixel = 0
-neonGlow.BackgroundTransparency = 0.8
-neonGlow.ZIndex = -1
-neonGlow.Parent = mainFrame
+-- Botón de Speed Boost (INFINITO - 150)
+local SpeedButton = Instance.new("TextButton")
+SpeedButton.Parent = Frame
+SpeedButton.Size = UDim2.new(0, 180, 0, 30)
+SpeedButton.Position = UDim2.new(0, 10, 0, 80)
+SpeedButton.Text = "Speed Boost: OFF"
+SpeedButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+SpeedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpeedButton.Font = Enum.Font.SourceSansBold
+SpeedButton.TextSize = 14
+SpeedButton.Name = "SpeedButton"
 
--- Decoración LED animada
-local ledCorners = {}
-local ledColors = {
-    Color3.new(0, 1, 0.5), -- Verde neón
-    Color3.new(0.2, 0.5, 1), -- Azul eléctrico
-    Color3.new(1, 0, 0.8), -- Rosa neón
-    Color3.new(1, 0.8, 0) -- Amarillo intenso
-}
-for i = 1, 4 do
-    local led = Instance.new("Frame")
-    led.Size = UDim2.new(0, 35, 0, 35)
-    led.BorderSizePixel = 0
-    led.BackgroundColor3 = ledColors[i]
-    led.Parent = mainFrame
-    
-    if i == 1 then
-        led.Position = UDim2.new(0, 0, 0, 0)
-    elseif i == 2 then
-        led.Position = UDim2.new(1, -35, 0, 0)
-    elseif i == 3 then
-        led.Position = UDim2.new(0, 0, 1, -35)
-    else
-        led.Position = UDim2.new(1, -35, 1, -35)
-    end
-    
-    table.insert(ledCorners, led)
-end
+-- Botón de Jump Boost
+local JumpButton = Instance.new("TextButton")
+JumpButton.Parent = Frame
+JumpButton.Size = UDim2.new(0, 180, 0, 30)
+JumpButton.Position = UDim2.new(0, 10, 0, 115)
+JumpButton.Text = "Jump Boost: OFF"
+JumpButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+JumpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+JumpButton.Font = Enum.Font.SourceSansBold
+JumpButton.TextSize = 14
+JumpButton.Name = "JumpButton"
 
--- Animación LED pulsante
-spawn(function()
-    while gui.Parent do
-        for _, led in pairs(ledCorners) do
-            led.BackgroundTransparency = 0.2
-        end
-        wait(0.3)
-        for _, led in pairs(ledCorners) do
-            led.BackgroundTransparency = 0.7
-        end
-        wait(0.3)
-    end
-end)
+-- Botón de God Mode
+local GodButton = Instance.new("TextButton")
+GodButton.Parent = Frame
+GodButton.Size = UDim2.new(0, 180, 0, 30)
+GodButton.Position = UDim2.new(0, 10, 0, 150)
+GodButton.Text = "God Mode: OFF"
+GodButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+GodButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodButton.Font = Enum.Font.SourceSansBold
+GodButton.TextSize = 14
+GodButton.Name = "GodButton"
 
--- Título con efecto de brillo
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -40, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 5)
-title.BackgroundTransparency = 1
-title.Text = "BRAINROT HACKS"
-title.TextColor3 = Color3.new(0, 1, 0.5)
-title.TextScaled = true
-title.Font = Enum.Font.GothamBold
-title.TextStrokeColor3 = Color3.new(0, 0.5, 0.2)
-title.TextStrokeTransparency = 0.3
-title.Parent = mainFrame
-
--- Botón cerrar con estilo cyberpunk
-local closeButton = Instance.new("TextButton")
-closeButton.Name = "CloseButton"
-closeButton.Size = UDim2.new(0, 30, 0, 30)
-closeButton.Position = UDim2.new(1, -35, 0, 5)
-closeButton.BackgroundColor3 = Color3.new(1, 0, 0.8)
-closeButton.BackgroundTransparency = 0.3
-closeButton.BorderSizePixel = 0
-closeButton.Text = "✕"
-closeButton.TextColor3 = Color3.new(1, 1, 1)
-closeButton.TextScaled = true
-closeButton.Font = Enum.Font.GothamBold
-closeButton.TextStrokeColor3 = Color3.new(0.5, 0, 0.3)
-closeButton.TextStrokeTransparency = 0
-closeButton.Parent = mainFrame
-
--- Efecto de borde neón para el botón cerrar
-local closeBorder = Instance.new("Frame")
-closeBorder.Size = UDim2.new(1, 6, 1, 6)
-closeBorder.Position = UDim2.new(0, -3, 0, -3)
-closeBorder.BackgroundColor3 = Color3.new(1, 0, 0.8)
-closeBorder.BorderSizePixel = 0
-closeBorder.BackgroundTransparency = 0.7
-closeBorder.ZIndex = -1
-closeBorder.Parent = closeButton
-
--- Función para cerrar la GUI
-closeButton.MouseButton1Click:Connect(function()
-    -- Animación de cierre
-    mainFrame:TweenPosition(UDim2.new(0.5, -160, 0.5, -500), "In", "Back", 0.5)
-    wait(0.5)
-    mainFrame.Visible = false
-    reOpenButton.Visible = true
-end)
-
--- Botones con estilo futurista
-local buttons = {}
-local buttonNames = {"ESP", "SPEED", "JUMP"}
-local buttonColors = {
-    Color3.new(0, 1, 0.5), -- Verde neón
-    Color3.new(0.2, 0.5, 1), -- Azul eléctrico
-    Color3.new(1, 0, 0.8) -- Rosa neón
-}
-for i, name in ipairs(buttonNames) do
-    local btn = Instance.new("TextButton")
-    btn.Name = name
-    btn.Size = UDim2.new(0, 260, 0, 45)
-    btn.Position = UDim2.new(0.5, -130, 0, 50 + (i-1)*55)
-    btn.BackgroundColor3 = buttonColors[i]
-    btn.BackgroundTransparency = 0.4
-    btn.BorderSizePixel = 0
-    btn.Text = name .. " [OFF]"
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.TextScaled = true
-    btn.Font = Enum.Font.GothamBold
-    btn.TextStrokeColor3 = Color3.new(0, 0, 0)
-    btn.TextStrokeTransparency = 0.5
-    btn.Parent = mainFrame
-    
-    -- Efecto de borde neón
-    local border = Instance.new("Frame")
-    border.Size = UDim2.new(1, 6, 1, 6)
-    border.Position = UDim2.new(0, -3, 0, -3)
-    border.BackgroundColor3 = buttonColors[i]
-    border.BorderSizePixel = 0
-    border.BackgroundTransparency = 0.7
-    border.ZIndex = -1
-    border.Parent = btn
-    
-    table.insert(buttons, btn)
-end
+-- Botón de ESP
+local ESPButton = Instance.new("TextButton")
+ESPButton.Parent = Frame
+ESPButton.Size = UDim2.new(0, 180, 0, 30)
+ESPButton.Position = UDim2.new(0, 10, 0, 185)
+ESPButton.Text = "ESP: OFF"
+ESPButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPButton.Font = Enum.Font.SourceSansBold
+ESPButton.TextSize = 14
+ESPButton.Name = "ESPButton"
 
 -- Variables de estado
-local espEnabled = false
+local noclipEnabled = false
 local speedEnabled = false
 local jumpEnabled = false
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
+local godEnabled = false
+local espEnabled = false
+local menuOpen = false
+local noclipConnection = nil
+local godConnection = nil
+local espHighlighters = {}
+local originalWalkSpeed = 16
+local originalJumpPower = 50
 
--- Función ESP mejorada
-local function createESP()
-    for _, plr in pairs(game.Players:GetPlayers()) do
-        if plr ~= player and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
-            -- Caja 3D con efecto neón
-            local espBox = Instance.new("BoxHandleAdornment")
-            espBox.Size = plr.Character.HumanoidRootPart.Size * 1.2
-            espBox.Adornee = plr.Character.HumanoidRootPart
-            espBox.Color3 = Color3.new(0, 1, 0.5)
-            espBox.Transparency = 0.4
-            espBox.ZIndex = 10
-            espBox.AlwaysOnTop = true
-            espBox.Parent = plr.Character.HumanoidRootPart
-            
-            -- Etiqueta con información
-            local espLabel = Instance.new("BillboardGui")
-            espLabel.Name = "ESPLabel"
-            espLabel.Adornee = plr.Character.HumanoidRootPart
-            espLabel.Size = UDim2.new(0, 150, 0, 80)
-            espLabel.StudsOffset = Vector3.new(0, 3, 0)
-            espLabel.AlwaysOnTop = true
-            espLabel.Parent = plr.Character
-            
-            -- Fondo de la etiqueta
-            local bg = Instance.new("Frame")
-            bg.Size = UDim2.new(1, 0, 1, 0)
-            bg.BackgroundColor3 = Color3.new(0, 0, 0)
-            bg.BackgroundTransparency = 0.4
-            bg.BorderSizePixel = 0
-            bg.Parent = espLabel
-            
-            -- Nombre del jugador
-            local nameLabel = Instance.new("TextLabel")
-            nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
-            nameLabel.Position = UDim2.new(0, 0, 0, 0)
-            nameLabel.BackgroundTransparency = 1
-            nameLabel.Text = plr.Name
-            nameLabel.TextColor3 = Color3.new(0, 1, 0.5)
-            nameLabel.TextStrokeTransparency = 0
-            nameLabel.TextScaled = true
-            nameLabel.Font = Enum.Font.GothamBold
-            nameLabel.Parent = bg
-            
-            -- Distancia
-            local distLabel = Instance.new("TextLabel")
-            distLabel.Size = UDim2.new(1, 0, 0.5, 0)
-            distLabel.Position = UDim2.new(0, 0, 0.5, 0)
-            distLabel.BackgroundTransparency = 1
-            distLabel.Text = "Dist: " .. math.floor((plr.Character.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Magnitude) .. "m"
-            distLabel.TextColor3 = Color3.new(1, 1, 1)
-            distLabel.TextStrokeTransparency = 0
-            distLabel.TextScaled = true
-            distLabel.Font = Enum.Font.Gotham
-            distLabel.Parent = bg
-        end
+-- Obtener servicios
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+-- Función para alternar el menú
+local function toggleMenu()
+    menuOpen = not menuOpen
+    
+    if menuOpen then
+        Frame.Visible = true
+        CircleButton.Text = "✕"
+        CircleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        
+        -- Animación de entrada suave
+        Frame.Position = UDim2.new(0, 40, 0, 10)
+        local tween = TweenService:Create(
+            Frame,
+            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            {Position = UDim2.new(0, 60, 0, 10)}
+        )
+        tween:Play()
+    else
+        CircleButton.Text = "☰"
+        CircleButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        
+        -- Animación de salida suave
+        local tween = TweenService:Create(
+            Frame,
+            TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+            {Position = UDim2.new(0, 40, 0, 10)}
+        )
+        tween:Play()
+        
+        -- Ocultar después de la animación
+        tween.Completed:Connect(function()
+            Frame.Visible = false
+        end)
     end
 end
 
-local function removeESP()
-    for _, plr in pairs(game.Players:GetPlayers()) do
-        if plr.Character then
-            for _, child in pairs(plr.Character:GetChildren()) do
-                if child:IsA("BoxHandleAdornment") or child.Name == "ESPLabel" then
-                    child:Destroy()
+-- Función para alternar el noclip
+local function toggleNoclip()
+    noclipEnabled = not noclipEnabled
+    
+    if noclipEnabled then
+        NoclipButton.Text = "Noclip: ON"
+        NoclipButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        
+        noclipConnection = RunService.Stepped:Connect(function()
+            if Character and Character:FindFirstChild("Humanoid") then
+                for _, part in pairs(Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    else
+        NoclipButton.Text = "Noclip: OFF"
+        NoclipButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        if noclipConnection then
+            noclipConnection:Disconnect()
+            noclipConnection = nil
+        end
+        
+        if Character then
+            for _, part in pairs(Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
                 end
             end
         end
     end
 end
 
--- Función para comprar coils (adaptada para Roba un brainrot)
-local function buyCoil(coilName)
-    -- IDs específicos para Roba un brainrot (¡DEBES ACTUALIZARLOS!)
-    local productId = 0
-    
-    if coilName == "SpeedCoil" then
-        productId = 12345678 -- ID REAL DEL SPEED COIL EN ROBA UN BRAINROT
-    elseif coilName == "GravityCoil" then
-        productId = 87654321 -- ID REAL DEL GRAVITY COIL EN ROBA UN BRAINROT
-    end
-    
-    if productId > 0 then
-        game:GetService("MarketplaceService"):PromptProductPurchase(player, productId)
-    end
-end
-
--- Función Speed con efectos visuales
+-- Función para alternar Speed Boost (INFINITO - 150)
 local function toggleSpeed()
     speedEnabled = not speedEnabled
+    
     if speedEnabled then
-        -- Verificar si tiene Speed Coil
-        local hasCoil = false
-        for _, item in pairs(player.Backpack:GetChildren()) do
-            if item.Name == "SpeedCoil" then
-                hasCoil = true
-                break
-            end
-        end
+        SpeedButton.Text = "Speed Boost: ON"
+        SpeedButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
         
-        if not hasCoil then
-            buyCoil("SpeedCoil")
-            wait(1) -- Esperar a que compre
-        end
-        
-        -- Activar speed con efectos
-        if character:FindFirstChild("Humanoid") then
-            character.Humanoid.WalkSpeed = 60
-            
-            -- Efecto de partículas
-            local speedParticles = Instance.new("ParticleEmitter")
-            speedParticles.Texture = "rbxassetid://243096095"
-            speedParticles.Color = ColorSequence.new(Color3.new(0, 1, 0.5))
-            speedParticles.Size = NumberSequence.new(0.3)
-            speedParticles.Lifetime = NumberRange.new(0.5)
-            speedParticles.Rate = 50
-            speedParticles.Parent = character.HumanoidRootPart
+        if Humanoid then
+            originalWalkSpeed = Humanoid.WalkSpeed
+            Humanoid.WalkSpeed = 150  -- Velocidad SUPER aumentada
         end
     else
-        if character:FindFirstChild("Humanoid") then
-            character.Humanoid.WalkSpeed = 16
-            
-            -- Eliminar partículas
-            for _, particle in pairs(character.HumanoidRootPart:GetChildren()) do
-                if particle:IsA("ParticleEmitter") then
-                    particle:Destroy()
-                end
-            end
+        SpeedButton.Text = "Speed Boost: OFF"
+        SpeedButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        if Humanoid then
+            Humanoid.WalkSpeed = originalWalkSpeed
         end
     end
 end
 
--- Función Jump Boost con efectos visuales
+-- Función para alternar Jump Boost
 local function toggleJump()
     jumpEnabled = not jumpEnabled
+    
     if jumpEnabled then
-        -- Verificar si tiene Gravity Coil
-        local hasCoil = false
-        for _, item in pairs(player.Backpack:GetChildren()) do
-            if item.Name == "GravityCoil" then
-                hasCoil = true
-                break
-            end
-        end
+        JumpButton.Text = "Jump Boost: ON"
+        JumpButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
         
-        if not hasCoil then
-            buyCoil("GravityCoil")
-            wait(1) -- Esperar a que compre
-        end
-        
-        -- Activar jump boost con efectos
-        if character:FindFirstChild("Humanoid") then
-            character.Humanoid.JumpPower = 120
-            
-            -- Efecto de aura
-            local jumpAura = Instance.new("PointLight")
-            jumpAura.Color = Color3.new(1, 0, 0.8)
-            jumpAura.Range = 10
-            jumpAura.Brightness = 2
-            jumpAura.Parent = character.HumanoidRootPart
+        if Humanoid then
+            originalJumpPower = Humanoid.JumpPower
+            Humanoid.JumpPower = 120  -- Salto SUPER aumentado
         end
     else
-        if character:FindFirstChild("Humanoid") then
-            character.Humanoid.JumpPower = 50
-            
-            -- Eliminar aura
-            for _, light in pairs(character.HumanoidRootPart:GetChildren()) do
-                if light:IsA("PointLight") then
-                    light:Destroy()
-                end
-            end
+        JumpButton.Text = "Jump Boost: OFF"
+        JumpButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        if Humanoid then
+            Humanoid.JumpPower = originalJumpPower
         end
     end
 end
 
--- Conexión de botones con animación
-buttons[1].MouseButton1Click:Connect(function()
+-- Función para alternar God Mode
+local function toggleGod()
+    godEnabled = not godEnabled
+    
+    if godEnabled then
+        GodButton.Text = "God Mode: ON"
+        GodButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        
+        if Humanoid then
+            -- Hacer inmortal
+            Humanoid.MaxHealth = math.huge
+            Humanoid.Health = math.huge
+            
+            -- Prevenir daño
+            godConnection = Humanoid.HealthChanged:Connect(function()
+                if Humanoid.Health < math.huge then
+                    Humanoid.Health = math.huge
+                end
+            end)
+        end
+    else
+        GodButton.Text = "God Mode: OFF"
+        GodButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        if godConnection then
+            godConnection:Disconnect()
+            godConnection = nil
+        end
+        
+        if Humanoid then
+            Humanoid.MaxHealth = 100
+            Humanoid.Health = 100
+        end
+    end
+end
+
+-- Función para crear ESP de un jugador
+local function createESP(player)
+    if player == Player then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    -- Crear Highlighter para el ESP
+    local highlighter = Instance.new("Highlight")
+    highlighter.Name = "ESP_" .. player.Name
+    highlighter.FillColor = Color3.fromRGB(255, 0, 0)
+    highlighter.OutlineColor = Color3.fromRGB(255, 255, 255)
+    highlighter.FillTransparency = 0.5
+    highlighter.OutlineTransparency = 0
+    highlighter.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlighter.Parent = character
+    
+    -- Crear billboard GUI con el nombre
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ESP_Name"
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = character
+    
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = player.Name
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.TextStrokeTransparency = 0
+    textLabel.TextSize = 14
+    textLabel.Font = Enum.Font.SourceSansBold
+    textLabel.Parent = billboard
+    
+    espHighlighters[player] = highlighter
+end
+
+-- Función para remover ESP de un jugador
+local function removeESP(player)
+    if espHighlighters[player] then
+        espHighlighters[player]:Destroy()
+        espHighlighters[player] = nil
+    end
+    
+    local character = player.Character
+    if character and character:FindFirstChild("ESP_Name") then
+        character.ESP_Name:Destroy()
+    end
+end
+
+-- Función para alternar ESP
+local function toggleESP()
     espEnabled = not espEnabled
+    
     if espEnabled then
-        createESP()
-        buttons[1].Text = "ESP [ON]"
-        buttons[1].BackgroundColor3 = Color3.new(0, 1, 0.5)
-        buttons[1].TextStrokeColor3 = Color3.new(0, 0.5, 0.2)
+        ESPButton.Text = "ESP: ON"
+        ESPButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        
+        -- Crear ESP para todos los jugadores existentes
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= Player then
+                createESP(player)
+            end
+        end
+        
+        -- Conectar para nuevos jugadores
+        Players.PlayerAdded:Connect(function(player)
+            if espEnabled then
+                player.CharacterAdded:Connect(function(character)
+                    if espEnabled then
+                        createESP(player)
+                    end
+                end)
+            end
+        end)
+        
     else
-        removeESP()
-        buttons[1].Text = "ESP [OFF]"
-        buttons[1].BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
-        buttons[1].TextStrokeColor3 = Color3.new(0.2, 0.2, 0.2)
+        ESPButton.Text = "ESP: OFF"
+        ESPButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        
+        -- Remover todos los ESP
+        for player, highlighter in pairs(espHighlighters) do
+            removeESP(player)
+        end
+        table.clear(espHighlighters)
+    end
+end
+
+-- Conectar el clic del círculo
+CircleButton.MouseButton1Click:Connect(toggleMenu)
+
+-- Conectar los clics de los botones del menú
+NoclipButton.MouseButton1Click:Connect(toggleNoclip)
+SpeedButton.MouseButton1Click:Connect(toggleSpeed)
+JumpButton.MouseButton1Click:Connect(toggleJump)
+GodButton.MouseButton1Click:Connect(toggleGod)
+ESPButton.MouseButton1Click:Connect(toggleESP)
+
+-- Manejar la reconexión del personaje
+Player.CharacterAdded:Connect(function(newCharacter)
+    Character = newCharacter
+    Humanoid = Character:WaitForChild("Humanoid")
+    
+    -- Reaplicar todas las funciones activas
+    if speedEnabled and Humanoid then
+        Humanoid.WalkSpeed = 150
     end
     
-    -- Animación de pulsación
-    buttons[1]:TweenSize(UDim2.new(0, 250, 0, 40), "Out", "Quad", 0.1)
-    wait(0.1)
-    buttons[1]:TweenSize(UDim2.new(0, 260, 0, 45), "Out", "Quad", 0.1)
-end)
-
-buttons[2].MouseButton1Click:Connect(function()
-    toggleSpeed()
-    if speedEnabled then
-        buttons[2].Text = "SPEED [ON]"
-        buttons[2].BackgroundColor3 = Color3.new(0.2, 0.5, 1)
-        buttons[2].TextStrokeColor3 = Color3.new(0, 0.2, 0.5)
-    else
-        buttons[2].Text = "SPEED [OFF]"
-        buttons[2].BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
-        buttons[2].TextStrokeColor3 = Color3.new(0.2, 0.2, 0.2)
+    if jumpEnabled and Humanoid then
+        Humanoid.JumpPower = 120
     end
     
-    -- Animación de pulsación
-    buttons[2]:TweenSize(UDim2.new(0, 250, 0, 40), "Out", "Quad", 0.1)
-    wait(0.1)
-    buttons[2]:TweenSize(UDim2.new(0, 260, 0, 45), "Out", "Quad", 0.1)
-end)
-
-buttons[3].MouseButton1Click:Connect(function()
-    toggleJump()
-    if jumpEnabled then
-        buttons[3].Text = "JUMP [ON]"
-        buttons[3].BackgroundColor3 = Color3.new(1, 0, 0.8)
-        buttons[3].TextStrokeColor3 = Color3.new(0.5, 0, 0.3)
-    else
-        buttons[3].Text = "JUMP [OFF]"
-        buttons[3].BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
-        buttons[3].TextStrokeColor3 = Color3.new(0.2, 0.2, 0.2)
+    if godEnabled then
+        toggleGod()
+        toggleGod()
     end
     
-    -- Animación de pulsación
-    buttons[3]:TweenSize(UDim2.new(0, 250, 0, 40), "Out", "Quad", 0.1)
-    wait(0.1)
-    buttons[3]:TweenSize(UDim2.new(0, 260, 0, 45), "Out", "Quad", 0.1)
-end)
-
--- Actualizar ESP para nuevos jugadores
-game.Players.PlayerAdded:Connect(function(plr)
-    if espEnabled then
-        plr.CharacterAdded:Wait()
-        createESP()
+    if noclipEnabled then
+        toggleNoclip()
+        toggleNoclip()
     end
 end)
 
--- Mantener ESP activo con actualización de distancia
-spawn(function()
-    while wait(0.5) do
-        if espEnabled then
-            createESP()
+-- Limpiar cuando el GUI se destruya
+ScreenGui.Destroying:Connect(function()
+    if noclipConnection then noclipConnection:Disconnect() end
+    if godConnection then godConnection:Disconnect() end
+    
+    -- Limpiar ESP
+    for player, highlighter in pairs(espHighlighters) do
+        removeESP(player)
+    end
+    
+    -- Restaurar valores originales
+    if Humanoid then
+        if speedEnabled then Humanoid.WalkSpeed = originalWalkSpeed end
+        if jumpEnabled then Humanoid.JumpPower = originalJumpPower end
+        if godEnabled then
+            Humanoid.MaxHealth = 100
+            Humanoid.Health = 100
         end
     end
 end)
 
--- Notificación de bienvenida
-spawn(function()
-    wait(1)
-    local notif = Instance.new("TextLabel")
-    notif.Size = UDim2.new(0, 300, 0, 50)
-    notif.Position = UDim2.new(0.5, -150, 0.8, 0)
-    notif.BackgroundTransparency = 0.3
-    notif.BackgroundColor3 = Color3.new(0, 1, 0.5)
-    notif.Text = "BRAINROT HACKS ACTIVADO!"
-    notif.TextColor3 = Color3.new(0, 0, 0)
-    notif.TextScaled = true
-    notif.Font = Enum.Font.GothamBold
-    notif.Parent = gui
+-- Función para manejar la tecla de acceso rápido
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
     
-    notif:TweenPosition(UDim2.new(0.5, -150, 0.6, 0), "Out", "Quad", 0.5)
-    wait(2)
-    notif:TweenPosition(UDim2.new(0.5, -150, 0.3, 0), "Out", "Quad", 0.5)
-    wait(0.5)
-    notif:Destroy()
+    if input.KeyCode == Enum.KeyCode.M then
+        toggleMenu()
+    elseif input.KeyCode == Enum.KeyCode.N then toggleNoclip()
+    elseif input.KeyCode == Enum.KeyCode.V then toggleSpeed()
+    elseif input.KeyCode == Enum.KeyCode.J then toggleJump()
+    elseif input.KeyCode == Enum.KeyCode.G then toggleGod()
+    elseif input.KeyCode == Enum.KeyCode.E then toggleESP()
+    end
 end)
+
+-- Mensaje de confirmación
+print("✅ Admin Panel activado! Controles: M (Menú), N (Noclip), V (Speed), J (Jump), G (God), E (ESP)")
+print("⚡ Speed Boost: 150 | Jump Boost: 120")
